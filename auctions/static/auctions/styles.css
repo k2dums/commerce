@@ -1,0 +1,22 @@
+body {
+    padding: 10px;
+}
+
+.row{
+    margin-left: 0px;
+    margin-right: 0px;
+    
+}
+
+.auction_nav{
+    margin-left:10px;
+
+}
+
+.user_nav{
+    margin-right:10px;
+}
+
+.login_form{
+    padding: 10px;
+}
