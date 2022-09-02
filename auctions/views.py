@@ -7,10 +7,11 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User,Listing
+import datetime
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html",{"listings":Listing.objects.all()})
 
 
 def login_view(request):
@@ -73,7 +74,16 @@ def listing(request):
         name=request.POST["name"]
         price=request.POST["price"]
         description=request.POST["description"]
-        time=request.POST["time"]
+        listing=Listing()
+        listing.name=name
+        listing.price=price
+        listing.description=description
+        listing.time=datetime.datetime.now()
+        listing.save()
+        return render(request,"auctions/index.html",{
+            "message":f"{name} has been listed",
+            "listings":Listing.objects.all()
+        })
     return render(request,"auctions/listing.html")
-\
+
     
