@@ -1,10 +1,12 @@
+from cgi import print_exception
+from unicodedata import name
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User,Listing
 
 
 def index(request):
@@ -61,3 +63,17 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def listing(request):
+    if not(request.user.is_authenticated):
+        return render(request,"auctions/login.html",{ 
+            "message":"Need to be logged in to create Listing"
+        })
+    if request.method=="POST":
+        name=request.POST["name"]
+        price=request.POST["price"]
+        description=request.POST["description"]
+        time=request.POST["time"]
+    return render(request,"auctions/listing.html")
+\
+    
