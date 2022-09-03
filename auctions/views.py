@@ -65,7 +65,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-def listing(request):
+def create_listing(request):
     if not(request.user.is_authenticated):
         return render(request,"auctions/login.html",{ 
             "message":"Need to be logged in to create Listing"
@@ -84,6 +84,6 @@ def listing(request):
             "message":f"{name} has been listed",
             "listings":Listing.objects.all()
         })
-    return render(request,"auctions/listing.html")
+    return render(request,"auctions/create_listing.html")
 
     
