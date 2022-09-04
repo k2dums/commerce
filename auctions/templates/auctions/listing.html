@@ -1,4 +1,56 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
-    <h1>{{listing.id}},{{listing.name}}</h1>
+    <div class="wrapper">
+        <div class="listed_item">
+
+    
+        <div class="row listing_title">
+            <span><h2>Lisiting:</h2></span>
+            <span><h2>{{listing.name.capitalize}}</h2></span>
+        </div>
+            
+        <div class="row img_detail_section">
+                <div class="col k2dums">this is image</div>
+                <div class="col">
+                    <div>Price:{{listing.price}}</div>
+                    <div>Description</div>
+                    <div>{{listing.description}}</div>
+                    <div>Listed at {{date}} {{time}}</div>
+                    <div>Listed by User {{listing.user}}</div>
+                 
+                </div>
+            </div>
+        </div>
+            <div class="bid_section">
+                <div>Current Bid price:{{listing.price}}</div>
+                <div>Current bid by:Dummy Text</div>
+                <div>Number of bids:{{no_bids}}</div>
+                <div>
+                    <ul>
+                        {% for bid in bids %}
+                        <li>{{bid}}</li>
+                        {% empty %}
+                        <li>None</li>
+                        {% endfor %}
+                    </ul>
+                   
+                    
+                </div>
+            </div>
+            <div class="comment_section">
+                <div>Comments</div>
+                    <div>   
+                        <ul>
+                            {% for comment in comments%}
+                            <li>{{comment.comment}}~{{comment.user}}</li>
+                            {% empty %}
+                            <li>None</li>
+                            {% endfor %}
+                        </ul>
+                          
+                    </div>
+             </div>
+        </div>
+    
+
 {% endblock %}
