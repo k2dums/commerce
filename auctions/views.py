@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User,Listing
+from .models import User,Listing,Bids
 import datetime
 
 
@@ -90,4 +90,11 @@ def listing(request,listing_id):
     listing=Listing.objects.get(pk=listing_id)
     return render(request,"auctions/listing.html",{
         "listing":listing,
+        "bid_current_name":"Dummy Text",
+        "no_bids":len(listing.bids.all()),
+        "bids":listing.bids.all(),
+        "comments":listing.comments.all(),
+        "time":listing.time[11:16],
+         "date":listing.time[0:10]
+
     })
