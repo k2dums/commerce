@@ -1,30 +1,46 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
-    <div class="wrapper">
+    <div class="listed_page_wrapper">
         <div class="listed_item">
 
     
         <div class="row listing_title">
-            <span><h2>Lisiting:</h2></span>
+            <span><h2>Listing:</h2></span>
             <span><h2>{{listing.name.capitalize}}</h2></span>
         </div>
             
         <div class="row img_detail_section">
-                <div class="col k2dums">this is image</div>
-                <div class="col">
-                    <div>Price:{{listing.price}}</div>
-                    <div>Description</div>
-                    <div>{{listing.description}}</div>
-                    <div>Listed at {{date}} {{time}}</div>
-                    <div>Listed by User {{listing.user}}</div>
-                 
+                <div class="col column_1">
+                    <div class="image_section">
+                        <img src="" alt="Listed Item {{listing.name}}"> 
+                    </div>
                 </div>
-            </div>
+                <div class="col column_2">
+                    <div class="detail_section">
+                    <div class="label_spacing">Price:{{listing.price}}</div>
+                    <div class="label_spacing">Description:</div>
+                    <div class="listing_description label_spacing">{{listing.description}}</div>
+                    <div class="label_spacing">Listed at {{date}} {{time}}</div>
+                    <div class="label_spacing">Listed by: {{listing.user}}</div>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <div class="bidding_section">
+                        <div class="row">
+                            <span class="bid_label"><h5>Bid</h5></span><span><input type="number" name="bid_price"></span>
+                        </div>
+                     
+                    </div>
+                    <div class="watchlist">
+                        <input type="Button" value="Add to Watchlist">
+                    </div>
+                    {% endif %}
+                </div>
         </div>
-            <div class="bid_section">
-                <div>Current Bid price:{{listing.price}}</div>
-                <div>Current bid by:Dummy Text</div>
-                <div>Number of bids:{{no_bids}}</div>
+        </div>
+        <div class="bid_details">
+                <div>Current Bid price: {{listing.price}}</div>
+                <div>Current bid by: Dummy Text</div>
+                <div>Number of bids: {{no_bids}}</div>
                 <div>
                     <ul>
                         {% for bid in bids %}
@@ -33,13 +49,17 @@
                         <li>None</li>
                         {% endfor %}
                     </ul>
-                   
-                    
-                </div>
-            </div>
-            <div class="comment_section">
-                <div>Comments</div>
-                    <div>   
+                 </div>
+        </div>
+        <div class="comment_section">
+                <div class="comment_title"><h3>Comments</h3></div>
+                    <div class="user_comment">
+                        <div class="row">
+                            <div class="comment_user"><strong>{{user}}</strong></icon></div>
+                            <textarea class="comment"></textarea>
+                        </div>
+                    </div>
+                    <div class="other_comments">   
                         <ul>
                             {% for comment in comments%}
                             <li>{{comment.comment}}~{{comment.user}}</li>
@@ -49,8 +69,8 @@
                         </ul>
                           
                     </div>
-             </div>
         </div>
+    </div>
     
 
 {% endblock %}
