@@ -74,11 +74,16 @@ def create_listing(request):
         name=request.POST["name"]
         price=request.POST["price"]
         description=request.POST["description"]
+        user=request.POST["user"]
+        #Provided the username is unique
+        user=User.objects.get(username=user)
         listing=Listing()
         listing.name=name
         listing.price=price
+        listing.bid_start=price
         listing.description=description
         listing.time=datetime.datetime.now()
+        listing.user=user
         listing.save()
         return render(request,"auctions/index.html",{
             "message":f"{name} has been listed",
