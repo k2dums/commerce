@@ -21,10 +21,8 @@ body {
     padding: 10px;
 }
 
-/* listing.html */
-.label_listing{
-    min-width:120px;
-}
+
+
 
 /* index.html*/
 svg.bi.bi-check-circle-fill{
@@ -33,13 +31,71 @@ svg.bi.bi-check-circle-fill{
 
 .listing_wrapper{
     margin:20px auto;
-    background-color: aqua;
+    color: black;
+    min-height: 300px;
+}
+.listing_wrapper a{
+    color:black;
+
 }
 .img_listing{
-    width: 300px;
-    height: 300px;
-    background-color: grey;
+    max-width:80%;
+
 }
 .description_listing{
+    border: 1px solid black;
+    max-width: 70%;
+    min-height:100px;
+}
+.listing_wrapper a:hover{
+    text-decoration: none;
+}
+
+/* listing.html */
+
+
+.label_listing{
+    min-width:120px;
+}
+.listing_description{
+    border: 1px solid black;
+    display: inline-block;
+    min-height: 200px;
+    min-width: 400px;
+}
+.listed_item{
     background-color: beige;
+    padding: 20px;
+}
+.image_section img{
+    
+    max-width:100%;
+
+}
+.img_detail_section .column_2 .label_spacing,.bidding_section{
+    margin-bottom: 7px;
+}
+
+.bidding_section .bid_label{
+    margin-right: 20px;
+}
+/* 
+.comment_section .row{
+    border: 1px solid black;
+} */
+
+
+.user_comment,.comment_title{
+    margin-bottom: 15px;
+}
+.comment{
+   width: 94%;
+   height:30px;
+   border:none;
+   border-bottom: 3px solid black;
+   outline: none;
+}
+
+.comment_user{
+    margin-right: 20px;
 }
