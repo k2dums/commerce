@@ -93,6 +93,21 @@ def create_listing(request):
 
 def listing(request,listing_id):
     listing=Listing.objects.get(pk=listing_id)
+    if request.method=="POST":
+        if "watchlist" in request.POST:
+            print(f'{listing.name} will be added {request.user} watchlist')
+        elif "bid" in request.POST:
+            bid_price=request.POST.get('bid_price')
+            if bid_price:
+                print(f"Placing Bid {bid_price} by {request.user}")
+            else:
+                print("No bids placed")
+        elif "comment_user" in request.POST:
+            comment=request.POST.get("comment")
+            if comment:
+                print(f"{comment}~{request.user}")
+            else:
+                print("No comments by user")
     return render(request,"auctions/listing.html",{
         "listing":listing,
         "bid_current_name":"Dummy Text",
@@ -100,6 +115,6 @@ def listing(request,listing_id):
         "bids":listing.bids.all(),
         "comments":listing.comments.all(),
         "time":listing.time[11:16],
-         "date":listing.time[0:10]
-
+         "date":listing.time[0:10],
+         "in_watchlist":False,
     })
