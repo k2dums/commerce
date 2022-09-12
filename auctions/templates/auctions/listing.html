@@ -1,15 +1,17 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
     <div class="listed_page_wrapper">
-        <div class="listed_item">
 
-    
+    <form action="{% url 'listing' listing.id %}" method="POST">
+        {% csrf_token %}
+        <div class="listed_item">
         <div class="row listing_title">
             <span><h2>Listing:</h2></span>
             <span><h2>{{listing.name.capitalize}}</h2></span>
         </div>
-            
-        <div class="row img_detail_section">
+        
+        
+            <div class="row img_detail_section">
                 <div class="col column_1">
                     <div class="image_section">
                         <img src="" alt="Listed Item {{listing.name}}"> 
@@ -26,17 +28,20 @@
                     {% if user.is_authenticated %}
                     <div class="bidding_section">
                         <div class="row">
-                            <span class="bid_label"><h5>Bid</h5></span><span><input type="number" name="bid_price"></span>
+                            <span class="bid_label"><h5>Bid</h5></span><span><input type="number" name="bid_price" style="margin-right: 10px;"></span>
+                            <input type="submit" value="Place Bid" name="bid" >
                         </div>
                      
                     </div>
                     <div class="watchlist">
-                        <input type="Button" value="Add to Watchlist">
+                        <input type="submit" value="Add to Watchlist" name="watchlist">
                     </div>
                     {% endif %}
                 </div>
         </div>
         </div>
+    
+
         <div class="bid_details">
                 <div>Current Bid price: {{listing.price}}</div>
                 <div>Current bid by: Dummy Text</div>
@@ -56,7 +61,8 @@
                     <div class="user_comment">
                         <div class="row">
                             <div class="comment_user"><strong>{{user}}</strong></icon></div>
-                            <textarea class="comment"></textarea>
+                            <textarea class="comment" name="comment"></textarea>
+                            <input type="submit" value="Comment" name="comment_user" />
                         </div>
                     </div>
                     <div class="other_comments">   
@@ -70,6 +76,9 @@
                           
                     </div>
         </div>
+       
+        </form>
+ 
     </div>
     
 
