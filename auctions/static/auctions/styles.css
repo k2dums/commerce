@@ -89,11 +89,12 @@ svg.bi.bi-check-circle-fill{
     margin-bottom: 15px;
 }
 .comment{
-   width: 94%;
+   width: 84%;
    height:30px;
    border:none;
    border-bottom: 3px solid black;
    outline: none;
+   margin-right: 10px;
 }
 
 .comment_user{
