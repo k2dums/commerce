@@ -1,17 +1,19 @@
-from cgi import print_exception
-from unicodedata import name
+
+from urllib import request
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import User,Listing,Bids
+from .models import Category, User,Listing,Bids,Comment
 import datetime
 
 
 def index(request):
-    return render(request, "auctions/index.html",{"listings":Listing.objects.all()})
+    return render(request, "auctions/index.html",{"listings":Listing.objects.all(),
+    })
 
 
 def login_view(request):
@@ -65,16 +67,19 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+@login_required
 def create_listing(request):
     if not(request.user.is_authenticated):
         return render(request,"auctions/login.html",{ 
             "message":"Need to be logged in to create Listing"
         })
     if request.method=="POST":
-        name=request.POST["name"]
-        price=request.POST["price"]
-        description=request.POST["description"]
-        user=request.POST["user"]
+        name=request.POST.get("name")
+        price=request.POST.get("price")
+        description=request.POST.get("description")
+        user=request.POST.get("user")
+        img_url=request.POST.get("img_url")
+        category=Category.objects.get(pk=request.POST.get("category"))
         #Provided the username is unique
         user=User.objects.get(username=user)
         listing=Listing()
@@ -84,18 +89,29 @@ def create_listing(request):
         listing.description=description
         listing.time=datetime.datetime.now()
         listing.user=user
+        listing.img_url=img_url
+        listing.category=category
         listing.save()
         return render(request,"auctions/index.html",{
             "message":f"{name} has been listed",
-            "listings":Listing.objects.all()
+            "listings":Listing.objects.all(),
+            
         })
-    return render(request,"auctions/create_listing.html")
+    return render(request,"auctions/create_listing.html",{
+        "categories":Category.objects.all(),
+    })
 
 def listing(request,listing_id):
+    if not(request.user.is_authenticated):
+        return render(request,"auctions/login.html",{ 
+            "message":"Need to be logged in to see Listing"
+        })
     listing=Listing.objects.get(pk=listing_id)
+    user=User.objects.get(pk=request.user.id)
     if request.method=="POST":
         if "watchlist" in request.POST:
             print(f'{listing.name} will be added {request.user} watchlist')
+            listing.users_watchlisting.add(user)
         elif "bid" in request.POST:
             bid_price=request.POST.get('bid_price')
             if bid_price:
@@ -104,6 +120,11 @@ def listing(request,listing_id):
                 print("No bids placed")
         elif "comment_user" in request.POST:
             comment=request.POST.get("comment")
+            comment_obj=Comment()
+            comment_obj.name=listing
+            comment_obj.comment=comment
+            comment_obj.user=user
+            comment_obj.save()
             if comment:
                 print(f"{comment}~{request.user}")
             else:
@@ -117,4 +138,21 @@ def listing(request,listing_id):
         "time":listing.time[11:16],
          "date":listing.time[0:10],
          "in_watchlist":False,
+    })
+
+@login_required
+def watchlist(request):
+    user=User.objects.get(pk=request.user.id)
+    print(user.watchlist.all())
+    print(type(user))
+    return render(request,"auctions/watchlist.html",{"watchlists":user.watchlist.all()})
+
+def category(request):
+    category=''
+    if request.method=='POST':
+        category=Category.objects.get(pk=request.POST.get("category"))
+        category=category.items.all()
+    return render(request,"auctions/category.html",{
+        "categories":Category.objects.all(),
+        "items":category,
     })
