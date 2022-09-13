@@ -14,7 +14,7 @@
             <div class="row img_detail_section">
                 <div class="col column_1">
                     <div class="image_section">
-                        <img src="" alt="Listed Item {{listing.name}}"> 
+                        <img src="{{listing.img_url}}" alt="Listed Item {{listing.name}}"> 
                     </div>
                 </div>
                 <div class="col column_2">
@@ -60,9 +60,9 @@
                 <div class="comment_title"><h3>Comments</h3></div>
                     <div class="user_comment">
                         <div class="row">
-                            <div class="comment_user"><strong>{{user}}</strong></icon></div>
-                            <textarea class="comment" name="comment"></textarea>
-                            <input type="submit" value="Comment" name="comment_user" />
+                            <div class="comment_user "><strong>{{user}}</strong></icon></div>
+                            <textarea class="comment col-l" name="comment"></textarea>
+                            <input type="submit" value="Comment" name="comment_user" class="col-sm submit_comment" />
                         </div>
                     </div>
                     <div class="other_comments">   
