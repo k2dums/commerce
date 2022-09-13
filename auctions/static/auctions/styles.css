@@ -23,7 +23,7 @@ body {
 
 
 
-
+/* ---------------------------------------------------------------- */
 /* index.html*/
 svg.bi.bi-check-circle-fill{
     margin:auto 10px;
@@ -38,9 +38,10 @@ svg.bi.bi-check-circle-fill{
     color:black;
 
 }
-.img_listing{
-    max-width:80%;
-
+.img_listing img{
+    max-width:400px;
+    max-height: 400px;
+    border: 1px solid black;
 }
 .description_listing{
     border: 1px solid black;
@@ -51,8 +52,8 @@ svg.bi.bi-check-circle-fill{
     text-decoration: none;
 }
 
+/* ------------------------------------------------------------------- */
 /* listing.html */
-
 
 .label_listing{
     min-width:120px;
@@ -68,8 +69,8 @@ svg.bi.bi-check-circle-fill{
     padding: 20px;
 }
 .image_section img{
-    
-    max-width:100%;
+    max-height:500px;
+    max-width:400px;
 
 }
 .img_detail_section .column_2 .label_spacing,.bidding_section{
@@ -94,9 +95,14 @@ svg.bi.bi-check-circle-fill{
    border:none;
    border-bottom: 3px solid black;
    outline: none;
-   margin-right: 10px;
+   margin-right: 1%;
 }
 
 .comment_user{
     margin-right: 20px;
+}
+
+.submit_comment{
+    max-width: 100px;
+    text-align: center;
 }
