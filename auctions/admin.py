@@ -4,6 +4,7 @@ from .models import Category, User,Listing,Bids,Comment
 
 class ListingAdmin(admin.ModelAdmin):
     list_display=("name","price","time","user")
+    filter_horizontal=("users_watchlisting",)
 class BidsAdmin(admin.ModelAdmin):
     list_display=("name","price","user")
 class CommentAdmin(admin.ModelAdmin):
