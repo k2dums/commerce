@@ -16,13 +16,13 @@
     {% for listing in listings %}
     
       <div class="row listing_wrapper">
-        <div class="col edge1">
-          <div class="img_listing"><img src="" alt="Item {{ listing.name }}"></div>
+        <div class="col ">
+          <div class="img_listing"><img src="{{listing.img_url}}" alt="Item {{ listing.name }}"></div>
         </div>
-        <div class="col edge">
+        <div class="col">
           <a href="{% url 'listing' listing.id %}">
             <div class="col">
-              <div class="name_listing">{{listing.name.capitalize}}</div>
+              <div class="name_listing"><h4>{{listing.name.capitalize}}</h4></div>
               <div class="price_wrapper_listing row">
                 <span class="price_label_listing">Price: </span>
                 <div class="price_listing">{{listing.price}}</div>
@@ -37,7 +37,7 @@
       </div>
 
       {% empty %}
-      <div class="none_listed"></div>
+      <div class="none_listed"><h5>No Listing</h5></div>
       {% endfor %}
     
 
