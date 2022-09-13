@@ -19,7 +19,11 @@
         </div>
         <div class="form-group">
             <label for="category" class="label_listing">Category</label>
-            <input type="text" placeholder="">
+            <select name="category">
+                {% for category in categories %}
+                <option value="{{category.id}}">{{category}}</option>
+                {% endfor %}
+            </select>
             
         </div>
         <div class="form-group">
