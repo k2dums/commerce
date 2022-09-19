@@ -5,6 +5,11 @@
     <form action="{% url 'listing' listing.id %}" method="POST">
         {% csrf_token %}
         <div class="listed_item">
+        {% if listing in user.watchlist.all%}
+        <div class="alert alert-secondary" role="alert" style="display: inline-block;">
+            Watchlist
+          </div>
+        {% endif %}
         <div class="row listing_title">
             <span><h2>Listing:</h2></span>
             <span><h2>{{listing.name.capitalize}}</h2></span>
@@ -25,16 +30,21 @@
                     <div class="label_spacing">Listed at {{date}} {{time}}</div>
                     <div class="label_spacing">Listed by: {{listing.user}}</div>
                     </div>
-                    {% if user.is_authenticated %}
+        
                     <div class="bidding_section">
                         <div class="row">
                             <span class="bid_label"><h5>Bid</h5></span><span><input type="number" name="bid_price" style="margin-right: 10px;"></span>
-                            <input type="submit" value="Place Bid" name="bid" >
+                            <input type="submit" class="btn btn-dark" value="Place Bid" name="bid" >
                         </div>
                      
                     </div>
+                    {% if listing in user.watchlist.all %}
                     <div class="watchlist">
-                        <input type="submit" value="Add to Watchlist" name="watchlist">
+                        <input type="submit" class="btn btn-secondary" value="Remove from Watchlist" name="remove_watchlist">
+                    </div>
+                    {% else %}
+                    <div class="watchlist">
+                        <input type="submit" class="btn btn-secondary" value="Add to Watchlist" name="watchlist">
                     </div>
                     {% endif %}
                 </div>
