@@ -24,6 +24,14 @@
                 </div>
                 <div class="col column_2">
                     <div class="detail_section">
+                    {% if active %}
+                    <div class="alert alert-success" role="alert" style="width: 400px;text-align: center;">
+                            <strong>ACTIVE</strong></div>
+                    {% else %}
+                    <div class="alert alert-dark" role="alert" style="width:400px;text-align: center;">
+                       <strong>INACTIVE</strong>
+                      </div>
+                    {% endif%}
                     <div class="label_spacing">Price:{{listing.price}}</div>
                     <div class="label_spacing">Description:</div>
                     <div class="listing_description label_spacing">{{listing.description}}</div>
@@ -32,13 +40,22 @@
                     </div>
         
                     <div class="bidding_section">
+                        {% if message %}
+                        <div class="alert alert-danger" role="alert" style="display:inline-block">
+                            {{message}}
+                        </div>
+                        {% endif %}
+                        {% if not user_listing and active %}
                         <div class="row">
                             <span class="bid_label"><h5>Bid</h5></span><span><input type="number" name="bid_price" style="margin-right: 10px;"></span>
                             <input type="submit" class="btn btn-dark" value="Place Bid" name="bid" >
                         </div>
+                        {% endif %}
                      
                     </div>
-                    {% if listing in user.watchlist.all %}
+
+                    <div class="row">
+                    {% if in_watchlist %}
                     <div class="watchlist">
                         <input type="submit" class="btn btn-secondary" value="Remove from Watchlist" name="remove_watchlist">
                     </div>
@@ -47,6 +64,13 @@
                         <input type="submit" class="btn btn-secondary" value="Add to Watchlist" name="watchlist">
                     </div>
                     {% endif %}
+                    </div>
+
+                    {% if close_listing %}
+                    <div >
+                        <button type="submit" class="btn btn-danger close_listing" name="close_listing" style="margin-top:20px; width: 400px;">Close Listing </button>
+                    </div>
+                   {% endif %}
                 </div>
         </div>
         </div>
@@ -54,7 +78,7 @@
 
         <div class="bid_details">
                 <div>Current Bid price: {{listing.price}}</div>
-                <div>Current bid by: Dummy Text</div>
+                <div>Current bid by: {{bidder}}</div>
                 <div>Number of bids: {{no_bids}}</div>
                 <div>
                     <ul>
