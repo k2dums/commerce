@@ -27,7 +27,7 @@ class Listing(models.Model):
     time=models.CharField(max_length=64)
     bid_start=models.IntegerField()
     category=models.ForeignKey(Category,on_delete=models.SET(get_sentinel_category),default=get_sentinel_category_id,related_name="listing_category")
-    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name="listing")
     users_watchlisting=models.ManyToManyField(User,blank=True,related_name="watchlist")
     img_url=models.CharField(max_length=200,null=True)
     category=models.ForeignKey(Category,on_delete=get_sentinel_category,default=get_sentinel_category_id,related_name="items")
