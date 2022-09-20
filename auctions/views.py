@@ -1,4 +1,5 @@
 
+
 from urllib import request
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -10,6 +11,16 @@ from django.contrib.auth.decorators import login_required
 from .models import Category, User,Listing,Bids,Comment
 import datetime
 
+from auctions import models
+
+def findbidder(listing):
+    allbids=listing.bids.all()
+    if allbids:
+        print(allbids.filter(price=listing.price))
+        return allbids.filter(price=listing.price)
+    else:
+        return None
+   
 
 def index(request):
     return render(request, "auctions/index.html",{"listings":Listing.objects.all(),
@@ -106,18 +117,27 @@ def listing(request,listing_id):
         return render(request,"auctions/login.html",{ 
             "message":"Need to be logged in to see Listing"
         })
+    message=""
     listing=Listing.objects.get(pk=listing_id)
     user=User.objects.get(pk=request.user.id)
+    close_listing = True if (listing in user.listing.all() and listing.status == "Active") else False
     if request.method=="POST":
         if "watchlist" in request.POST:
             print(f'[ADDED]{listing.name} will be added {request.user} watchlist')
             listing.users_watchlisting.add(user)
         elif "bid" in request.POST:
-            bid_price=request.POST.get('bid_price')
-            if bid_price:
-                print(f"[SAVING]Placing Bid {bid_price} by {request.user}")
+            bid_price=int(request.POST.get('bid_price'))
+            if bid_price>listing.bid_start and bid_price>listing.price and listing.user is not user:
+                    print(f"[SAVING]Placing Bid {bid_price} by {request.user}")
+                    bid=Bids()
+                    bid.name=listing
+                    bid.user=user
+                    bid.price=bid_price
+                    bid.save()
+                    listing.price=bid_price
+                    listing.save()
             else:
-                print("No bids placed")
+                message="Invalid Bid amount, must be greater than the last bid  and starting bid"
         elif "comment_user" in request.POST:
             comment=request.POST.get("comment")
             comment_obj=Comment()
@@ -133,15 +153,31 @@ def listing(request,listing_id):
         elif "remove_watchlist" in request.POST:
             print(f'[REMOVED]{listing.name} will be removed {request.user} watchlist')
             listing.users_watchlisting.remove(user)
+        elif "close_listing" in request.POST:
+            listing.status=models.set_Listing_inactive
+            listing.save()
+
+        return HttpResponseRedirect(reverse("listing",kwargs={"listing_id":listing_id}))
+
+    bidder=findbidder(listing)
+    if bidder:
+        bidder=findbidder(listing)[0].user
+    else :
+        bidder=None
+    user_listing= True if listing in user.listing.all() else False
     return render(request,"auctions/listing.html",{
         "listing":listing,
-        "bid_current_name":"Dummy Text",
+        "bidder":bidder,
         "no_bids":len(listing.bids.all()),
         "bids":listing.bids.all(),
         "comments":listing.comments.all(),
         "time":listing.time[11:16],
          "date":listing.time[0:10],
-         "in_watchlist":False,
+         "in_watchlist":listing in user.watchlist.all(),
+         "message":message,
+         "close_listing":close_listing,
+         "user_listing":user_listing,
+         "active":True if listing.status=="Active" else False
     })
 
 @login_required
@@ -152,11 +188,21 @@ def watchlist(request):
     return render(request,"auctions/watchlist.html",{"watchlists":user.watchlist.all()})
 
 def category(request):
-    category=''
+    category=None
+    listings=None
     if request.method=='POST':
         category=Category.objects.get(pk=request.POST.get("category"))
-        category=category.items.all()
+        listings=category.items.all()
+    if category is None:
+        listings=Listing.objects.all()
     return render(request,"auctions/category.html",{
         "categories":Category.objects.all(),
-        "items":category,
+        "listings":listings,
     })
+
+@login_required
+def your_listing(request):
+    user=User.objects.get(pk=request.user.id)
+    return render(request,"auctions/your_listing.html",{
+        "listings":user.listing.all(),
+        })
