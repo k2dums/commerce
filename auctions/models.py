@@ -11,7 +11,7 @@ def get_sentinel_category_id():
 def set_Listing_active():
     return "Active"
 def set_Listing_inactive():
-    return 'Inactive'
+    return 'Closed'
 class User(AbstractUser):
     pass
 
@@ -22,10 +22,10 @@ class Category(models.Model):
 
 class Listing(models.Model):
     name=models.CharField(max_length=64)
-    price=models.IntegerField()
     description=models.CharField(max_length=64)
     time=models.CharField(max_length=64)
-    bid_start=models.IntegerField()
+    bid_start=models.IntegerField(default=1)
+    price=models.IntegerField(blank=False,default=bid_start)
     category=models.ForeignKey(Category,on_delete=models.SET(get_sentinel_category),default=get_sentinel_category_id,related_name="listing_category")
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name="listing")
     users_watchlisting=models.ManyToManyField(User,blank=True,related_name="watchlist")
