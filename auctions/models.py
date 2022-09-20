@@ -8,6 +8,10 @@ def get_sentinel_category():
     return Category.objects.get_or_create(name="None")[0]
 def get_sentinel_category_id():
     return get_sentinel_category().id
+def set_Listing_active():
+    return "Active"
+def set_Listing_inactive():
+    return 'Inactive'
 class User(AbstractUser):
     pass
 
@@ -27,6 +31,7 @@ class Listing(models.Model):
     users_watchlisting=models.ManyToManyField(User,blank=True,related_name="watchlist")
     img_url=models.CharField(max_length=200,null=True)
     category=models.ForeignKey(Category,on_delete=get_sentinel_category,default=get_sentinel_category_id,related_name="items")
+    status=models.CharField(max_length=10,default=set_Listing_active)
     def __str__(self):
         return f"Item-id({self.id}):Name({self.name}):Price({self.price})"
 
