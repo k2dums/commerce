@@ -40,7 +40,7 @@ svg.bi.bi-check-circle-fill{
 }
 .img_listing img{
     max-width:400px;
-    max-height: 400px;
+    max-height: 270px;
     border: 1px solid black;
 }
 .description_listing{
@@ -69,7 +69,7 @@ svg.bi.bi-check-circle-fill{
     padding: 20px;
 }
 .image_section img{
-    max-height:500px;
+    max-height:300px;
     max-width:400px;
 
 }
