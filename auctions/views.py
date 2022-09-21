@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Avg, Max, Min, Sum
 from .models import Category, User,Listing,Bids,Comment
 import datetime
 
@@ -16,14 +16,13 @@ from auctions import models
 def findbidder(listing):
     allbids=listing.bids.all()
     if allbids:
-        print(allbids.filter(price=listing.price))
         return allbids.filter(price=listing.price)
     else:
         return None
    
 
 def index(request):
-    return render(request, "auctions/index.html",{"listings":Listing.objects.all(),
+    return render(request, "auctions/index.html",{"listings":Listing.objects.filter(status="Active"),
     })
 
 
@@ -121,6 +120,13 @@ def listing(request,listing_id):
     listing=Listing.objects.get(pk=listing_id)
     user=User.objects.get(pk=request.user.id)
     close_listing = True if (listing in user.listing.all() and listing.status == "Active") else False
+    if listing.status==models.set_Listing_inactive():
+        winner=listing.bids.filter(price=listing.bids.all().aggregate(Max('price')).get("price__max"))[0].user
+        if winner==user:
+            message=f"You won the bid"
+        else:
+            message=f"{winner} won the bid" 
+
     if request.method=="POST":
         if "watchlist" in request.POST:
             print(f'[ADDED]{listing.name} will be added {request.user} watchlist')
@@ -154,7 +160,7 @@ def listing(request,listing_id):
             print(f'[REMOVED]{listing.name} will be removed {request.user} watchlist')
             listing.users_watchlisting.remove(user)
         elif "close_listing" in request.POST:
-            listing.status=models.set_Listing_inactive
+            listing.status=models.set_Listing_inactive()
             listing.save()
 
         return HttpResponseRedirect(reverse("listing",kwargs={"listing_id":listing_id}))
@@ -183,7 +189,6 @@ def listing(request,listing_id):
 @login_required
 def watchlist(request):
     user=User.objects.get(pk=request.user.id)
-    print(user.watchlist.all())
     print(type(user))
     return render(request,"auctions/watchlist.html",{"watchlists":user.watchlist.all()})
 
