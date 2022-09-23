@@ -20,7 +20,8 @@ def findbidder(listing):
     else:
         return None
    
-
+def findwinner(listing):
+    return listing.bids.filter(price=listing.bids.all().aggregate(Max('price')).get("price__max"))
 def index(request):
     return render(request, "auctions/index.html",{"listings":Listing.objects.filter(status="Active"),
     })
@@ -108,7 +109,7 @@ def create_listing(request):
             
         })
     return render(request,"auctions/create_listing.html",{
-        "categories":Category.objects.all(),
+        "categories":Category.objects.exclude(name="None"),
     })
 
 def listing(request,listing_id):
@@ -116,16 +117,24 @@ def listing(request,listing_id):
         return render(request,"auctions/login.html",{ 
             "message":"Need to be logged in to see Listing"
         })
-    message=""
+    winning_message=message=""
     listing=Listing.objects.get(pk=listing_id)
     user=User.objects.get(pk=request.user.id)
+    you_won=False
     close_listing = True if (listing in user.listing.all() and listing.status == "Active") else False
     if listing.status==models.set_Listing_inactive():
-        winner=listing.bids.filter(price=listing.bids.all().aggregate(Max('price')).get("price__max"))[0].user
-        if winner==user:
-            message=f"You won the bid"
+        winner=findwinner(listing)
+        if len(winner)>0:
+            winner=winner[0].user
         else:
-            message=f"{winner} won the bid" 
+            winner=None
+        if winner==user:
+            winning_message=f"You won the bid"
+            you_won=True
+        elif winner==None:
+            winning_message="Closed before any bids"
+        else:
+            winning_message=f"{winner} won the bid" 
 
     if request.method=="POST":
         if "watchlist" in request.POST:
@@ -150,8 +159,8 @@ def listing(request,listing_id):
             comment_obj.name=listing
             comment_obj.comment=comment
             comment_obj.user=user
-            comment_obj.save()
             if comment:
+                comment_obj.save()
                 print(f"{comment}~{request.user}")
             else:
                 print("No comments by user")
@@ -183,13 +192,14 @@ def listing(request,listing_id):
          "message":message,
          "close_listing":close_listing,
          "user_listing":user_listing,
-         "active":True if listing.status=="Active" else False
+         "active":True if listing.status=="Active" else False,
+         "winning_message":winning_message,
+         "you_won":you_won,
     })
 
 @login_required
 def watchlist(request):
     user=User.objects.get(pk=request.user.id)
-    print(type(user))
     return render(request,"auctions/watchlist.html",{"watchlists":user.watchlist.all()})
 
 def category(request):
@@ -201,7 +211,7 @@ def category(request):
     if category is None:
         listings=Listing.objects.all()
     return render(request,"auctions/category.html",{
-        "categories":Category.objects.all(),
+        "categories":Category.objects.exclude(name="None"),
         "listings":listings,
     })
 
