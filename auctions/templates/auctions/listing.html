@@ -1,7 +1,17 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
     <div class="listed_page_wrapper">
+        {% if you_won and winning_message %}
+        <div class="alert alert-success" role="alert">
+           {{winning_message}}
+        </div>
+        {% elif not you_won and winning_message %}
+        <div class="alert alert-warning" role="alert">
+            {{winning_message}}
+          </div>
+        {% endif %}
 
+        
     <form action="{% url 'listing' listing.id %}" method="POST">
         {% csrf_token %}
         <div class="listed_item">
@@ -32,11 +42,11 @@
                        <strong>INACTIVE</strong>
                       </div>
                     {% endif%}
-                    <div class="label_spacing">Price:{{listing.price}}</div>
-                    <div class="label_spacing">Description:</div>
+                    <div class="label_spacing"><strong>Price</strong>: {{listing.price}}</div>
+                    <div class="label_spacing"><strong>Description</strong>:</div>
                     <div class="listing_description label_spacing">{{listing.description}}</div>
-                    <div class="label_spacing">Listed at {{date}} {{time}}</div>
-                    <div class="label_spacing">Listed by: {{listing.user}}</div>
+                    <div class="label_spacing"><strong>Listed at</strong>: {{date}} {{time}}</div>
+                    <div class="label_spacing"><strong>Listed by</strong>: {{listing.user}}</div>
                     </div>
         
                     <div class="bidding_section">
@@ -83,7 +93,7 @@
                 <div>
                     <ul>
                         {% for bid in bids %}
-                        <li>{{bid}}</li>
+                        <li>Bid <strong>{{bid.price}}</strong> by <strong>{{bid.user}}</strong></li>
                         {% empty %}
                         <li>None</li>
                         {% endfor %}
@@ -96,7 +106,7 @@
                         <div class="row">
                             <div class="comment_user "><strong>{{user}}</strong></icon></div>
                             <textarea class="comment col-l" name="comment"></textarea>
-                            <input type="submit" value="Comment" name="comment_user" class="col-sm submit_comment" />
+                            <input type="submit" value="Comment" name="comment_user" class="col-sm submit_comment btn btn-primary" />
                         </div>
                     </div>
                     <div class="other_comments">   
@@ -104,7 +114,7 @@
                             {% for comment in comments%}
                             <li>{{comment.comment}}~{{comment.user}}</li>
                             {% empty %}
-                            <li>None</li>
+                            <strong>No Comments</strong>
                             {% endfor %}
                         </ul>
                           
