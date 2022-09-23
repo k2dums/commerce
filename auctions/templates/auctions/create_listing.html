@@ -2,24 +2,17 @@
 
 {% block body %}
 
-<h2 style="text-align:center;">Create a Listing</h2>
+<h2 class="mb-3">Create a Listing</h2>
 <form action="{% url 'create_listing' %}" method="post">
     {% csrf_token %}
         <div class="form-group center">
-           <label for="name" class="label_listing">ItemName</label>
-           <input type="text" name="name" id="name">
+           <label for="name" class="label_listing form-label">ItemName</label>
+           <input type="text" name="name" id="name" class="form-control col-5">
         </div>
         <div class="form-group">
-            <label for="price" class="label_listing">Price</label>
-            <input type="number" name="price" id="price">
-        </div>
-        <div class="form-group">
-            <label for="description" class="label_listing">Description</label>
-            <textarea name="description" id="description"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="category" class="label_listing">Category</label>
-            <select name="category">
+            <label for="category" class="label_listing form-label">Category</label>
+            <select class="form-select col-3"  name="category"  id="category" >
+                <option selected disabled value="">Choose...</option>
                 {% for category in categories %}
                 <option value="{{category.id}}">{{category}}</option>
                 {% endfor %}
@@ -27,10 +20,22 @@
             
         </div>
         <div class="form-group">
-            <label for="img_url" class="label_listing">Image Url</label>
-            <input type="text" name="img_url" id="img_url">
+            <label for="price" class="label_listing form-label">Price</label>
+            <input type="number" name="price" id="price" class="form-control col-5">
         </div>
+        <div class="form-group">
+            <label for="img_url" class="label_listing form-label">Image Url</label>
+            <input type="text" name="img_url" id="img_url" class="form-control col-5">
+        </div>
+        <div class="form-group">
+            <label for="description" class="label_listing form-label">Description</label>
+            <textarea name="description" id="description" class="form-control col-5"></textarea>
+        </div>
+
+    
         <input name="user" type="hidden" value="{{ user }}"></input>
-    <input type="submit" value="Create Listing">
+    <input type="submit" value="Create Listing" class="btn btn-primary">
+
+  
 </form>
 {% endblock %}
