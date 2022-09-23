@@ -33,19 +33,23 @@ svg.bi.bi-check-circle-fill{
     margin:20px auto;
     color: black;
     min-height: 300px;
+    padding: 10px;
+    box-shadow:1px 6px 10px gray;
 }
 .listing_wrapper a{
     color:black;
 
 }
+.img_listing{
+    text-align: center;
+}
 .img_listing img{
-    max-width:400px;
+    max-width:80%;
     max-height: 270px;
-    border: 1px solid black;
 }
 .description_listing{
     border: 1px solid black;
-    max-width: 70%;
+    max-width: 50%;
     min-height:100px;
 }
 .listing_wrapper a:hover{
@@ -54,7 +58,10 @@ svg.bi.bi-check-circle-fill{
 
 /* ------------------------------------------------------------------- */
 /* listing.html */
-
+.listed_item{
+    padding: 20px;
+    box-shadow: 1px 1px 10px rgba(0, 255, 55, 0.164);
+}
 .label_listing{
     min-width:120px;
 }
@@ -64,10 +71,7 @@ svg.bi.bi-check-circle-fill{
     min-height: 200px;
     min-width: 400px;
 }
-.listed_item{
-    background-color: beige;
-    padding: 20px;
-}
+
 .image_section img{
     max-height:300px;
     max-width:400px;
