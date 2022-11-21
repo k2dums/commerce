@@ -141,8 +141,13 @@ def listing(request,listing_id):
             print(f'[ADDED]{listing.name} will be added {request.user} watchlist')
             listing.users_watchlisting.add(user)
         elif "bid" in request.POST:
-            bid_price=int(request.POST.get('bid_price'))
-            if bid_price>listing.bid_start and bid_price>listing.price and listing.user is not user:
+            bid_price=request.POST.get('bid_price')
+            if bid_price=="":
+                message="Bid value is blank"
+            else:
+                bid_price=int(bid_price)
+                if bid_price>listing.bid_start and bid_price>listing.price and listing.user is not user:
+
                     print(f"[SAVING]Placing Bid {bid_price} by {request.user}")
                     bid=Bids()
                     bid.name=listing
@@ -151,8 +156,8 @@ def listing(request,listing_id):
                     bid.save()
                     listing.price=bid_price
                     listing.save()
-            else:
-                message="Invalid Bid amount, must be greater than the last bid  and starting bid"
+                else:
+                    message="Invalid Bid amount, must be greater than the last bid  and starting bid"
         elif "comment_user" in request.POST:
             comment=request.POST.get("comment")
             comment_obj=Comment()
@@ -172,7 +177,7 @@ def listing(request,listing_id):
             listing.status=models.set_Listing_inactive()
             listing.save()
 
-        return HttpResponseRedirect(reverse("listing",kwargs={"listing_id":listing_id}))
+        # return HttpResponseRedirect(reverse("listing",kwargs={"listing_id":listing_id}))
 
     bidder=findbidder(listing)
     if bidder:
@@ -195,6 +200,7 @@ def listing(request,listing_id):
          "active":True if listing.status=="Active" else False,
          "winning_message":winning_message,
          "you_won":you_won,
+
     })
 
 @login_required
