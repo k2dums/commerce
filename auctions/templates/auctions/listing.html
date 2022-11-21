@@ -88,7 +88,7 @@
 
         <div class="bid_details">
                 <div>Current Bid price: {{listing.price}}</div>
-                <div>Current bid by: {{bidder}}</div>
+                <div>Current bid :{% if bidder == request.user %} Your Bid {% else %}{{bidder}}{% endif %}</div>
                 <div>Number of bids: {{no_bids}}</div>
                 <div>
                     <ul>
